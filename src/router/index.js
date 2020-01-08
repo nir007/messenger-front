@@ -33,10 +33,16 @@ import Layout from '@/layout'
 export const constantRoutes = [
   {
     path: '/login',
+    name: 'login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
+  {
+    path: '/registration',
+    name: 'registration',
+    component: () => import('@/views/registration/index'),
+    hidden: true
+  },
   {
     path: '/404',
     component: () => import('@/views/404'),
@@ -54,7 +60,32 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
+  {
+    path: '/applications',
+    component: Layout,
+    name: 'applications',
+    redirect: '/applications/index',
+    meta: { title: 'Applications', icon: 'table' },
+    children: [{
+      path: 'index',
+      name: 'Applications',
+      component: () => import('@/views/application/index'),
+      meta: { title: 'Index', icon: 'table' }
+    },
+    {
+      path: 'create',
+      name: 'applicationCreate',
+      component: () => import('@/views/application/create'),
+      meta: { title: 'Create', icon: 'form' }
+    },
+    {
+      path: 'view/:id',
+      name: 'applicationView',
+      component: () => import('@/views/application/view'),
+      meta: { title: 'Create', icon: 'form' },
+      hidden: true
+    }]
+  },
   {
     path: '/example',
     component: Layout,

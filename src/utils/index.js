@@ -105,3 +105,15 @@ export function param2Obj(url) {
       '"}'
   )
 }
+
+export function formatDate(dateStr) {
+  if (dateStr) {
+    const parts = dateStr.split(' ')
+    if (!parts[0] || !parts[1]) return dateStr
+    const date = parts[0]
+    const time = parts[1]
+
+    return date + ' ' + time.substr(0, 8)
+  }
+  return dateSrt
+}

@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Vue Admin Template',
+  title: 'Sitius messanger API',
 
   /**
    * @type {boolean} true | false

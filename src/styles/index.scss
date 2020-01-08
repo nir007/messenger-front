@@ -48,6 +48,11 @@ div:focus {
   outline: none;
 }
 
+.title {
+  font-weight: 400;
+  font-size: 30px;
+}
+
 .clearfix {
   &:after {
     visibility: hidden;

@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, registration } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -28,14 +28,15 @@ const mutations = {
 }
 
 const actions = {
-  // user login
-  login({ commit }, userInfo) {
-    const { username, password } = userInfo
+  // user registration
+  registration({ commit }, userInfo) {
+    const { name, second, email, password } = userInfo
     return new Promise((resolve, reject) => {
-      login({ username: username.trim(), password: password }).then(response => {
+      registration({
+        name: name.trim(), second: second.trim(), email: email.trim(), password: password
+      }).then(resposne => {
         const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        console.log(data)
         resolve()
       }).catch(error => {
         reject(error)
@@ -43,21 +44,36 @@ const actions = {
     })
   },
 
-  // get user info
-  getInfo({ commit, state }) {
+  // user login
+  login({ commit }, userInfo) {
+    const { email, password } = userInfo
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
-        const { data } = response
+      login({ email: email.trim(), password: password }).then(response => {
+        commit('SET_TOKEN', response.token)
+        setToken(response.token)
+        resolve()
+      }).catch(error => {
+        console.log(error)
+        reject(error)
+      })
+    })
+  },
 
-        if (!data) {
+  // get user info
+  getInfo({ commit }) {
+    return new Promise((resolve, reject) => {
+      getInfo().then(response => {
+        console.log(response)
+        const { result } = response
+
+        if (!result) {
           reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
+        const { name } = result
 
         commit('SET_NAME', name)
-        commit('SET_AVATAR', avatar)
-        resolve(data)
+        resolve(result)
       }).catch(error => {
         reject(error)
       })

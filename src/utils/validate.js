@@ -18,3 +18,20 @@ export function validUsername(str) {
   const valid_map = ['admin', 'editor']
   return valid_map.indexOf(str.trim()) >= 0
 }
+
+/**
+ * @param {string} str
+ * @returns {Boolean}
+ */
+export function validFIO(str) {
+  return str && str.length > 0
+}
+
+/**
+ * @param {string} str
+ * @returns {Boolean}
+ */
+export function validEmail(str) {
+  return str.indexOf('@') > 0
+}
+
