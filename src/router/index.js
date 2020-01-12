@@ -48,7 +48,16 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true
   },
-
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/profile',
+    children: [{
+      path: '/profile',
+      component: () => import('@/views/profile/index'),
+      hidden: true
+    }]
+  },
   {
     path: '/',
     component: Layout,
@@ -107,7 +116,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/form',
     component: Layout,
@@ -120,7 +128,6 @@ export const constantRoutes = [
       }
     ]
   },
-
   {
     path: '/nested',
     component: Layout,

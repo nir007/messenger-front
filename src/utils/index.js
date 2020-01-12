@@ -115,5 +115,5 @@ export function formatDate(dateStr) {
 
     return date + ' ' + time.substr(0, 8)
   }
-  return dateSrt
+  return ''
 }

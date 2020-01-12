@@ -44,9 +44,6 @@ service.interceptors.response.use(
    */
   response => {
     const {data, status} = response
-    console.log(data)
-    console.log("CODE: " + status)
-
     if (status !== 200 && status !== 201 && status !== 204) {
       Message({
         message: res.error || 'Error',
@@ -68,7 +65,11 @@ service.interceptors.response.use(
       }
       return Promise.reject(new Error(data.error || 'Error'))
     }
-
+    Message({
+      message: 'The action is succeed',
+      duration: 5 * 1000,
+      type: 'success'
+    })
     return data
   },
   error => {
