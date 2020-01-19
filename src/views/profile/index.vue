@@ -1,54 +1,67 @@
 <template>
   <div class="app-container">
-    <div v-if="user">
-      <el-row :gutter="20">
 
-        <el-col :span="6" :xs="24">
-          <user-card :user="user" />
-        </el-col>
+    <el-card shadow="never" style="width: 500px">
+      <div slot="header" class="clearfix">
+        {{user.name}} {{user.second}}
+      </div>
+      <div class="user-profile">
+        <div class="box-center">
+          <div class="default-avatar">{{ user.name.substr(0, 1) }}</div>
+        </div>
+        <div class="box-center">
+          <div class="user-name text-center">{{ user.name }}</div>
+        </div>
+      </div>
 
-        <el-col :span="18" :xs="24">
-          <el-card>
-            <el-tabs v-model="activeTab">
-              <el-tab-pane label="Activity" name="activity">
-                <activity />
-              </el-tab-pane>
-              <el-tab-pane label="Timeline" name="timeline">
-                <timeline />
-              </el-tab-pane>
-              <el-tab-pane label="Account" name="account">
-                <account :user="user" />
-              </el-tab-pane>
-            </el-tabs>
-          </el-card>
-        </el-col>
+      <div class="user-bio">
+        <div class="user-education user-bio-section">
+          <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>Education</span></div>
+          <div class="user-bio-section-body">
+            <div class="text-muted">
+              JS in Computer Science from the University of Technology
+            </div>
+          </div>
+        </div>
 
-      </el-row>
-    </div>
+        <div class="user-skills user-bio-section">
+          <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>Skills</span></div>
+          <div class="user-bio-section-body">
+            <div class="progress-item">
+              <span>Vue</span>
+              <el-progress :percentage="70" />
+            </div>
+            <div class="progress-item">
+              <span>JavaScript</span>
+              <el-progress :percentage="18" />
+            </div>
+            <div class="progress-item">
+              <span>Css</span>
+              <el-progress :percentage="12" />
+            </div>
+            <div class="progress-item">
+              <span>ESLint</span>
+              <el-progress :percentage="100" status="success" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import UserCard from './components/UserCard'
-import Activity from './components/Activity'
-import Timeline from './components/Timeline'
-import Account from './components/Account'
 export default {
   name: 'Profile',
-  components: { UserCard, Activity, Timeline, Account },
   data() {
     return {
-      user: {},
+      user: {
+        name: '',
+        second: '',
+        email: ''
+      },
       activeTab: 'activity'
     }
-  },
-  computed: {
-    ...mapGetters([
-      'name',
-      'avatar',
-      'roles'
-    ])
   },
   created() {
     this.getUser()

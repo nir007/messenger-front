@@ -310,19 +310,6 @@
 </script>
 
 <style>
-  .default-avatar {
-    text-transform: uppercase;
-    border-radius: 50%;
-    width: 90px;
-    height: 90px;
-    line-height: 90px;
-    background-color: #409EFF;
-    font-size: 50px;
-    font-weight: 900;
-    color: white;
-    text-align: center;
-    float: left;
-  }
   .el-tag + .el-tag {
     margin-left: 10px;
   }
