@@ -46,7 +46,7 @@
               <el-input v-model="form.description"></el-input>
             </el-form-item>
             <el-form-item label="Secret*:">
-              <b>{{ form.secret }}</b> 
+              <b>{{ form.secret }}</b>
               <el-popover
                 placement="top"
                 width="270"
@@ -88,7 +88,7 @@
               <b>{{ form.updatedAt }}</b>
             </el-form-item>
             <el-form-item label="Is active:">
-              <el-switch 
+              <el-switch
                 active-color="#13ce66"
                 inactive-color="#ff4949"
                 v-model="form.isActive">
@@ -98,6 +98,39 @@
               <el-button type="primary" @click="onSubmit">Save changes</el-button>
             </el-form-item>
           </el-form>
+          <el-divider></el-divider>
+          <h2>Danger Zone</h2>
+          <div class="danger-zone">
+            <span style="font-size: 30px">Delete this application, users and messages.</span>
+            <el-popover
+              placement="top"
+              width="230"
+              v-model="visibleDeleteApp">
+              <p><b>Delete this application?</b></p>
+              <p>Are you sure?</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="deleteApplication">Yes, delete</el-button>
+                <el-button type="primary" size="mini" @click="visibleDeleteApp = false">No, cancel</el-button>
+              </div>
+              <el-button slot="reference" icon="el-icon-delete" type="danger" style="float:right">Delete</el-button>
+            </el-popover>
+            <div class="cl"></div>
+            <el-divider></el-divider>
+            <span style="font-size: 30px">Delete all users and messages.</span>
+            <el-popover
+              placement="top"
+              width="210"
+              v-model="visibleDeleteAppUsers">
+              <p><b>Delete all users?</b></p>
+              <p>Are you sure?</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click="deleteApplication">Yes, delete</el-button>
+                <el-button type="primary" size="mini" @click="visibleDeleteAppUsers = false">No, cancel</el-button>
+              </div>
+              <el-button slot="reference" icon="el-icon-delete" type="danger" style="float:right">Delete</el-button>
+            </el-popover>
+            <div class="cl"></div>
+          </div>
         </el-card>
       </el-col>
       <el-col :lg="9" :md="12" :sm="12" :xs="24" :xl="9">
@@ -115,15 +148,7 @@
             </el-col>
           </el-row>
           <br>
-          <el-card shadow="hover" v-for="item in users" :item="item" v-bind:key="item.id">
-            <div class="default-avatar">{{ item.name.substr(0, 1) }}</div>
-            <div style="margin-left:120px">
-              <p><b>{{item.name}} {{item.second}}</b></p>
-              <p>Gender: {{item.gender}}</p>
-              <p>Created at: {{item.createdAt}}</p>
-            </div>
-            <div class="cl"></div>
-          </el-card>
+          <app-user-card v-bind:users="users"></app-user-card>
         </el-card>
       </el-col>
     </el-row>
@@ -133,7 +158,9 @@
 <script>
   import { formatDate } from '../../utils/index'
   import { validEmail } from '@/utils/validate'
+  import AppUserCard from "./components/appUserCard";
   export default {
+    components: {AppUserCard},
     data() {
       const validateName = (rule, value, callback) => {
         if (value.length < 2) {
@@ -191,6 +218,8 @@
         count: 10,
         loading: false,
         visibleRefresh: false,
+        visibleDeleteApp: false,
+        visibleDeleteAppUsers: false,
         inputVisible: false,
         inputValue: '',
         form: {
@@ -213,6 +242,14 @@
           console.log(response)
           this.form.secret = response.secret
           this.form.updatedAt = response.updatedAt ? formatDate(response.updatedAt) : 'does not updated yet'
+        }).catch((err) => {
+          console.log(err)
+        })
+      },
+      deleteApplication() {
+        let self = this
+        this.$store.dispatch('application/remove', {id: this.$route.params.id}).then((response) => {
+          self.$router.push({name: 'applications'})
         }).catch((err) => {
           console.log(err)
         })
@@ -250,6 +287,7 @@
         this.$store.dispatch('appuser/readAll', {appID: this.form.id, page: this.page, perpage: this.perPage}).then((response) => {
           console.log(response)
           for (let u in response) {
+            response[u].visibleDeleteUser = false
             response[u].createdAt = formatDate(response[u].createdAt)
             response[u].updatedAt = formatDate(response[u].updatedAt)
             this.users.push(response[u])
@@ -301,7 +339,7 @@
         this.form.deletedAt = response.deletedAt ? formatDate(response.deletedAt) : 'does not deleted'
         this.form.managers = response.managers
 
-        this.loadUsers() 
+        this.loadUsers()
       }).catch((err) => {
         console.log(err)
       })

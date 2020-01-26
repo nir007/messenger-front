@@ -32,8 +32,7 @@ export function update(params) {
 
 export function remove(params) {
   return request({
-    url: '/admin/users',
-    method: 'delete',
-    data: params
+    url: '/admin/users/' + params.id + '/' + params.appID,
+    method: 'delete'
   })
 }

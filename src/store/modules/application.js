@@ -56,7 +56,7 @@ const actions = {
    // remove an application
    remove({ commit }, params) {
     return new Promise((resolve, reject) => {
-      remove(params.id).then(response => {
+      remove(params).then(response => {
         console.log(response)
         const { result } = response
         resolve(result)

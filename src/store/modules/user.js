@@ -1,12 +1,19 @@
 import { login, logout, getInfo, registration } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { formatDate } from '@/utils/index'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    second: '',
+    isConfirmed: false,
+    createdAt: '',
+    phone: '',
+    email: '',
+    id: ''
   }
 }
 
@@ -21,6 +28,27 @@ const mutations = {
   },
   SET_NAME: (state, name) => {
     state.name = name
+  },
+  SET_SECOND: (state, val) => {
+    state.second = val
+  },
+  SET_EMAIL: (state, val) => {
+    state.email = val
+  },
+  SET_PHONE: (state, val) => {
+    state.phone = val ? val : 'not set'
+  },
+  SET_IS_CONFIRMED: (state, val) => {
+    state.isConfirmed = val
+  },
+  SET_CREATED_AT: (state, val) => {
+    state.createdAt = formatDate(val)
+  },
+  SET_NAME: (state, name) => {
+    state.name = name
+  },
+  SET_ID: (state, name) => {
+    state.id = name
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
@@ -70,9 +98,16 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { name } = result
+        const { id, name, second, email, isConfirmed, phone, avatar, createdAt } = result
 
+        commit('SET_ID', id)
         commit('SET_NAME', name)
+        commit('SET_SECOND', second)
+        commit('SET_EMAIL', email)
+        commit('SET_PHONE', phone)
+        commit('SET_IS_CONFIRMED', isConfirmed)
+        commit('SET_AVATAR', avatar)
+        commit('SET_CREATED_AT', createdAt)
         resolve(result)
       }).catch(error => {
         reject(error)
@@ -83,14 +118,10 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      removeToken() // must remove  token  first
+      resetRouter()
+      commit('RESET_STATE')
+      resolve()
     })
   },
 

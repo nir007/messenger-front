@@ -31,9 +31,9 @@ export function update(params) {
 }
 
 export function remove(params) {
+  alert( params.id)
   return request({
-    url: '/admin/applications',
-    method: 'delete',
-    params
+    url: '/admin/applications/' + params.id,
+    method: 'delete'
   })
 }

@@ -1,60 +1,50 @@
 <template>
   <div class="app-container">
-
-    <el-card shadow="never" style="width: 500px">
-      <div slot="header" class="clearfix">
-        {{user.name}} {{user.second}}
-      </div>
-      <div class="user-profile">
-        <div class="box-center">
-          <div class="default-avatar">{{ user.name.substr(0, 1) }}</div>
-        </div>
-        <div class="box-center">
-          <div class="user-name text-center">{{ user.name }}</div>
-        </div>
-      </div>
-
-      <div class="user-bio">
-        <div class="user-education user-bio-section">
-          <div class="user-bio-section-header"><svg-icon icon-class="education" /><span>Education</span></div>
-          <div class="user-bio-section-body">
-            <div class="text-muted">
-              JS in Computer Science from the University of Technology
+    <el-row>
+      <el-col :md="7">
+        <el-card>
+          <div slot="header" class="clearfix">
+            <el-button style="float: right;" @click="logout" type="danger">Log out</el-button>
+          </div>
+          <div class="user-profile">
+            <div style="display: table; margin:30px auto;" class="default-avatar">{{ name.substr(0, 1) }}</div>
+            <div style="text-align: center">
+              <p><b>{{name}} {{second}}</b></p>
+              <p class="text-gray">email: {{email}}</p>
+              <p class="text-gray">phone: {{phone}}</p>
+              <p class="text-gray">registered: {{createdAt}}</p>
             </div>
           </div>
-        </div>
-
-        <div class="user-skills user-bio-section">
-          <div class="user-bio-section-header"><svg-icon icon-class="skill" /><span>Skills</span></div>
-          <div class="user-bio-section-body">
-            <div class="progress-item">
-              <span>Vue</span>
-              <el-progress :percentage="70" />
-            </div>
-            <div class="progress-item">
-              <span>JavaScript</span>
-              <el-progress :percentage="18" />
-            </div>
-            <div class="progress-item">
-              <span>Css</span>
-              <el-progress :percentage="12" />
-            </div>
-            <div class="progress-item">
-              <span>ESLint</span>
-              <el-progress :percentage="100" status="success" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-card>
+        </el-card>
+      </el-col>
+      <el-col :md="1"><div style="color: #fff">.</div></el-col>
+      <el-col :md="16">
+        <el-card>
+          <el-tabs v-model="activeName" type="border-card">
+            <el-tab-pane label="Applications" name="applications">
+              <applications v-bind:tableData="tableData"></applications>
+            </el-tab-pane>
+            <el-tab-pane label="Config" name="second">Config</el-tab-pane>
+            <el-tab-pane label="Role" name="third">Role</el-tab-pane>
+            <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+          </el-tabs>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { formatDate } from '../../utils/index'
+import applications from '../application/components/applicationsTable'
 export default {
   name: 'Profile',
+  components: {applications},
   data() {
     return {
+      activeName: 'applications',
+      tableData: [],
       user: {
         name: '',
         second: '',
@@ -63,18 +53,48 @@ export default {
       activeTab: 'activity'
     }
   },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+      'avatar',
+      'name',
+      'second',
+      'email',
+      'phone',
+      'id',
+      'isConfirmed',
+      'createdAt'
+    ])
+  },
   created() {
-    this.getUser()
   },
   methods: {
-    getUser() {
-      this.user = {
-        name: this.name,
-        role: this.roles.join(' | '),
-        email: 'admin@test.com',
-        avatar: this.avatar
-      }
+    async logout() {
+      await this.$store.dispatch('user/logout')
+      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
+  },
+  beforeMount() {
+    this.$store.dispatch('application/readAll', {}).then((response) => {
+      for(let i in response) {
+        this.tableData.push({
+          id: response[i].id,
+          name: response[i].name,
+          description: response[i].description,
+          secret: response[i].secret,
+          salt: response[i].salt,
+          domains: response[i].domains,
+          isActive: response[i].isActive,
+          createdAt: formatDate(response[i].createdAt),
+          updatedAt: response[i].updatedAt ? formatDate(response[i].updatedAt) : 'does not updated yet',
+          deletedAt: response[i].deletedAt ? response[i].deletedAt : 'does not deleted',
+          managers: response[i].managers,
+        })
+      }
+    }).catch((err) => {
+      console.log(err)
+    })
   }
 }
 </script>
+
