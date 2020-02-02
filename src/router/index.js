@@ -50,6 +50,11 @@ export const constantRoutes = [
   },
   {
     path: '/',
+    component: () => import('@/views/index'),
+    hidden: true
+  },
+  {
+    path: '/profile',
     component: Layout,
     redirect: '/profile',
     children: [{
@@ -79,7 +84,7 @@ export const constantRoutes = [
       path: 'index',
       name: 'Applications',
       component: () => import('@/views/application/index'),
-      meta: { title: 'Index', icon: 'table' }
+      meta: { title: 'See all', icon: 'table' }
     },
     {
       path: 'create',
@@ -94,39 +99,6 @@ export const constantRoutes = [
       meta: { title: 'Create', icon: 'form' },
       hidden: true
     }]
-  },
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
   },
   {
     path: '/nested',
@@ -187,12 +159,12 @@ export const constantRoutes = [
   },
 
   {
-    path: 'external-link',
+    path: '/',
     component: Layout,
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: '/',
+        meta: { title: 'Site Home page', icon: 'link' }
       }
     ]
   },

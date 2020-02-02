@@ -1,11 +1,15 @@
 <template>
   <div class="app-container">
-    <h2 class="title">My applications</h2>
-    <el-tooltip class="item" effect="dark" content="Open form to create new application" placement="right">
-      <router-link to="create">
-        <el-button icon="el-icon-circle-plus-outline" type="primary" :to="'/dashboard'">Create an application</el-button>
-      </router-link>
-    </el-tooltip>
+    <el-row>
+      <el-col :md="12">
+        <h2 class="title">My applications</h2>
+      </el-col>
+      <el-col :md="12">
+        <router-link to="create">
+          <el-button style="margin-top: 20px; float: right" icon="el-icon-circle-plus-outline" type="primary">Create an application</el-button>
+        </router-link>
+      </el-col>
+    </el-row>
     <br><br>
     <applications v-bind:tableData="tableData"></applications>
   </div>
